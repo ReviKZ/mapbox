@@ -1,4 +1,5 @@
 import React, { useRef, useEffect, useState } from 'react';
+import 'mapbox-gl/dist/mapbox-gl.css';
 import '../../Styling/Map.css';
 import mapboxgl from 'mapbox-gl';
 
@@ -11,6 +12,8 @@ const Map = () => {
     const [lat, setLat] = useState(47.094056);
     const [zoom, setZoom] = useState(13);
 
+    const nav = new mapboxgl.NavigationControl();
+
     useEffect(() => {
         if (map.current) return; //Render map only once
         map.current = new mapboxgl.Map({
@@ -19,12 +22,11 @@ const Map = () => {
             center: [lng, lat],
             zoom: zoom
         });
+        map.current.addControl(nav);
     });
 
     return (
         <div>
-            {/* Importing default styling like this since "import 'mapbox-gl/dist/mapbox-gl.css';" did not work! */}
-            <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v0.53.0/mapbox-gl.css' rel='stylesheet' />
             <div ref={mapContainer} className="map-container" />
         </div>
     );
