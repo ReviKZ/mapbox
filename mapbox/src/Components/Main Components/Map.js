@@ -14,6 +14,8 @@ const Map = () => {
 
     const nav = new mapboxgl.NavigationControl();
 
+    var navList = [];
+
     useEffect(() => {
         if (map.current) return; //Render map only once
         map.current = new mapboxgl.Map({
@@ -23,6 +25,10 @@ const Map = () => {
             zoom: zoom
         });
         map.current.addControl(nav);
+
+        map.current.on('click', (e) => {
+            navList.push(new mapboxgl.Marker().setLngLat(e.lngLat).addTo(map.current));
+        });
     });
 
     return (
