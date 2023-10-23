@@ -1,6 +1,8 @@
 import React, { useRef, useEffect, useState } from 'react';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import '../../Styling/Map.css';
+import MapboxGeocoder from '@mapbox/mapbox-gl-geocoder';
+import '@mapbox/mapbox-gl-geocoder/dist/mapbox-gl-geocoder.css';
 import mapboxgl from 'mapbox-gl';
 
 const Map = () => {
@@ -13,6 +15,11 @@ const Map = () => {
     const [zoom, setZoom] = useState(13);
 
     const nav = new mapboxgl.NavigationControl();
+    const searchBox = new MapboxGeocoder({
+        accessToken: mapboxgl.accessToken,
+        marker: false,
+        mapboxgl: mapboxgl
+    });
 
     var navList = [];
 
@@ -24,10 +31,15 @@ const Map = () => {
             center: [lng, lat],
             zoom: zoom
         });
+        map.current.addControl(searchBox);
         map.current.addControl(nav);
 
         map.current.on('click', (e) => {
             navList.push(new mapboxgl.Marker().setLngLat(e.lngLat).addTo(map.current));
+        });
+
+        searchBox.on('result', (result) => {
+            navList.push(new mapboxgl.Marker().setLngLat(result.result.center).addTo(map.current));
         });
     });
 
