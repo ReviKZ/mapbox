@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import '../../Styling/Nav.css';
 
-const Nav = ({ coordList, distance, time, removeMarker }) => {
+const Nav = ({ coordList, distance, time, removeMarker, planRoute }) => {
     const [list, setList] = useState(coordList);
 
     useEffect(() => {
@@ -23,9 +23,9 @@ const Nav = ({ coordList, distance, time, removeMarker }) => {
                 }
             </ul>
             <div id="information">
-                <b className="distance">{distance ? distance : <></>} km</b>
-                <b className="time">{time ? time / 60 : <></>} minutes</b><br />
-                <button id="plan-button">Plan</button>
+                <b className="distance">{distance ? distance : <></>} km</b><br />
+                <b className="time">{time ? time : <></>} minutes</b><br />
+                <button id="plan-button" onClick={() => planRoute()}>Plan</button>
             </div>
         </div>
     );
