@@ -12,6 +12,7 @@ If you're from windows, you might have to install wsl, you can do that by execut
 If you're from linux, you have everything you need.
 Navigate to the folder where you saved the project in bash/ps. 
 In the mapbox (parent) folder you have to see docker-compose.yml file.
+You have to open a file in a text-editor or IDE and instead of "your-mapbox-token" you should write your own access token, which you can find here: https://account.mapbox.com/
 You just have to execute the "docker-compose up" command in the mapbox folder, from there on it's automated.
 If you notice that you have the docker container running, you can open a browser, and write localhost:3000 in the browser.
 There you go, you can see the application.
