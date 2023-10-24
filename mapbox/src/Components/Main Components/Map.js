@@ -45,6 +45,15 @@ const Map = () => {
         setRoute(result);
     }
 
+    const [color, setColor] = useState("#378c5a");
+    const [width, setWidth] = useState(4);
+
+    function changeLine(event) {
+        event.preventDefault();
+        setColor(document.getElementById("color").value);
+        setWidth(parseInt(document.getElementById("width").value));
+    }
+
     useEffect(() => {
         if (map.current) return; //Render map only once
         map.current = new mapboxgl.Map({
@@ -85,8 +94,8 @@ const Map = () => {
                     'line-cap': 'round',
                 },
                 paint: {
-                    'line-color': '#378c5a',
-                    'line-width': 4,
+                    'line-color': color,
+                    'line-width': width,
                     'line-opacity': 0.8,
                 },
             });
@@ -116,12 +125,18 @@ const Map = () => {
         }
     }, [route]);
 
+    useEffect(() => {
+        if (map.current.getSource('route')) {
+            map.current.setPaintProperty('route', 'line-color', color);
+            map.current.setPaintProperty('route', 'line-width', width);
+        }
+    }, [color, width])
     
 
     return (
         <div>
             <div ref={mapContainer} className="map-container" />
-            <Nav coordList={navList} removeMarker={removeMarker} planRoute={planRoute} distance={distance} time={time}  />
+            <Nav coordList={navList} removeMarker={removeMarker} planRoute={planRoute} distance={distance} time={time} changeLine={changeLine} />
         </div>
     );
 }
