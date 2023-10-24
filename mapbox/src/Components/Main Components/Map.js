@@ -3,6 +3,7 @@ import 'mapbox-gl/dist/mapbox-gl.css';
 import '../../Styling/Map.css';
 import MapboxGeocoder from '@mapbox/mapbox-gl-geocoder';
 import '@mapbox/mapbox-gl-geocoder/dist/mapbox-gl-geocoder.css';
+import Nav from './Nav';
 import mapboxgl from 'mapbox-gl';
 
 const Map = () => {
@@ -21,7 +22,14 @@ const Map = () => {
         mapboxgl: mapboxgl
     });
 
-    var navList = [];
+    const [navList, setNavList] = useState([]);
+
+    function removeMarker(index) {
+        navList[index].marker.remove();
+        let currentList = [...navList];
+        let modifiedList = currentList.filter(marker => marker !== currentList[index]);
+        setNavList(modifiedList);
+    }
 
     useEffect(() => {
         if (map.current) return; //Render map only once
@@ -35,17 +43,26 @@ const Map = () => {
         map.current.addControl(nav);
 
         map.current.on('click', (e) => {
-            navList.push(new mapboxgl.Marker().setLngLat(e.lngLat).addTo(map.current));
+            const marker = new mapboxgl.Marker().setLngLat(e.lngLat).addTo(map.current);
+            setNavList((prevNavList) => [
+                ...prevNavList,
+                {marker},
+            ]);
         });
 
         searchBox.on('result', (result) => {
-            navList.push(new mapboxgl.Marker().setLngLat(result.result.center).addTo(map.current));
+            const marker = new mapboxgl.Marker().setLngLat(result.result.center).addTo(map.current);
+            setNavList((prevNavList) => [
+                ...prevNavList,
+                {marker},
+            ]);
         });
     });
 
     return (
         <div>
             <div ref={mapContainer} className="map-container" />
+            <Nav coordList={navList} removeMarker={removeMarker}  />
         </div>
     );
 }
